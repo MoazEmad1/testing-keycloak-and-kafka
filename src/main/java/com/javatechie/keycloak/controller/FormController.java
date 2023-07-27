@@ -5,6 +5,7 @@ import com.javatechie.keycloak.service.FormService;
 import com.javatechie.keycloak.kafka.KafkaProducer;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class FormController {
+    @Value("${keycloak.realm}")
+    private String realm;
+
+    private String clientId="springboot-keycloack";
+
+    @Value("${keycloak.auth-server-url}")
+    private String authServerUrl;
+
+    private String redirectUri="http://localhost:9090/form";
 
     private final FormService formService;
     private final KafkaProducer kafkaProducer;
@@ -24,6 +34,16 @@ public class FormController {
     public FormController(FormService formService, KafkaProducer kafkaProducer) {
         this.formService = formService;
         this.kafkaProducer = kafkaProducer;
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+    @PostMapping("/login")
+    public String processLogin(@RequestParam("username") String username, @RequestParam("password") String password) {
+        return "redirect:"+String.format("%s/realms/%s/protocol/openid-connect/auth?response_type=code&client_id=%s&redirect_uri=%s",
+                authServerUrl, realm, clientId, redirectUri);
     }
 
     @GetMapping("/form")

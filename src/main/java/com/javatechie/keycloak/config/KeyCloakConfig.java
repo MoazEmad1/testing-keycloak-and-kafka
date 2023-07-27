@@ -2,6 +2,7 @@ package com.javatechie.keycloak.config;
 
 import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -21,7 +22,6 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-@EnableKafka
 public class KeyCloakConfig {
 
     @Bean
@@ -46,15 +46,14 @@ public class KeyCloakConfig {
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login*").permitAll()
+                                .requestMatchers("/form").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .formLogin(formLogin -> formLogin.loginPage("/login"))
-                .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout")))
                 .oauth2Login(Customizer.withDefaults());
 
         return http.build();
     }
+
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
