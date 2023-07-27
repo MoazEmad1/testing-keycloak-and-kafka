@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Controller
 public class FormController {
     @Value("${keycloak.realm}")
@@ -25,7 +24,7 @@ public class FormController {
     @Value("${keycloak.auth-server-url}")
     private String authServerUrl;
 
-    private String redirectUri="http://localhost:9090/form";
+    private String redirectUri="http://localhost:8080/form";
 
     private final FormService formService;
     private final KafkaProducer kafkaProducer;
@@ -40,6 +39,7 @@ public class FormController {
     public String login() {
         return "login";
     }
+
     @PostMapping("/login")
     public String processLogin(@RequestParam("username") String username, @RequestParam("password") String password) {
         return "redirect:"+String.format("%s/realms/%s/protocol/openid-connect/auth?response_type=code&client_id=%s&redirect_uri=%s",
@@ -62,5 +62,11 @@ public class FormController {
         kafkaProducer.sendMessage(formDataEdited.toString());
         formService.saveFormData(formDataEdited);
         return "redirect:/success";
+    }
+
+    @GetMapping("/success")
+    public String showSuccessPage() {
+        // Add any logic or model attributes needed for the success page
+        return "success"; // Assuming you have a "success" view to show the success message.
     }
 }
