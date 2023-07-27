@@ -66,7 +66,6 @@ public class FormController {
 
     @GetMapping("/success")
     public String showSuccessPage() {
-        // Add any logic or model attributes needed for the success page
-        return "success"; // Assuming you have a "success" view to show the success message.
+        return "success";
     }
 }
