@@ -5,7 +5,6 @@ import com.javatechie.keycloak.service.FormService;
 import com.javatechie.keycloak.kafka.KafkaProducer;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,18 +31,15 @@ public class FormController {
 
     @PostMapping("/save")
     public String submitForm(@ModelAttribute("formData") @Valid FormData formData, BindingResult bindingResult,
-                             @RequestParam("address") String address, @RequestParam("phone") String phone) {
+                             @RequestParam("address") String address,
+                             @RequestParam("phone") String phone) {
         if (bindingResult.hasErrors()) {
             return "form";
         }
         FormData formDataEdited = new FormData(address, phone);
         kafkaProducer.sendMessage(formDataEdited.toString());
         formService.saveFormData(formDataEdited);
-        return "redirect:/success";
-    }
-
-    @GetMapping("/success")
-    public String showSuccessPage() {
         return "success";
     }
+
 }
