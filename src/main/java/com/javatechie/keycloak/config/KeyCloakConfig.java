@@ -23,7 +23,6 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class KeyCloakConfig {
-
     @Bean
     public KeycloakConfigResolver keycloakConfigResolver() {
         return new KeycloakSpringBootConfigResolver();
@@ -55,7 +54,6 @@ public class KeyCloakConfig {
 
         return http.build();
     }
-
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {

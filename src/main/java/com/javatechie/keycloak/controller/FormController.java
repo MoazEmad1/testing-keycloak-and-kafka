@@ -16,16 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class FormController {
-    @Value("${keycloak.realm}")
-    private String realm;
-
-    private String clientId="springboot-keycloack";
-
-    @Value("${keycloak.auth-server-url}")
-    private String authServerUrl;
-
-    private String redirectUri="http://localhost:8080/form";
-
     private final FormService formService;
     private final KafkaProducer kafkaProducer;
 
@@ -34,18 +24,6 @@ public class FormController {
         this.formService = formService;
         this.kafkaProducer = kafkaProducer;
     }
-
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String processLogin(@RequestParam("username") String username, @RequestParam("password") String password) {
-        return "redirect:"+String.format("%s/realms/%s/protocol/openid-connect/auth?response_type=code&client_id=%s&redirect_uri=%s",
-                authServerUrl, realm, clientId, redirectUri);
-    }
-
     @GetMapping("/form")
     public String showForm(Model model) {
         model.addAttribute("formData", new FormData());
