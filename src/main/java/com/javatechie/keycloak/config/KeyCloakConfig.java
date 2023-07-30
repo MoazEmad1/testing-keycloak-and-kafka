@@ -43,9 +43,9 @@ public class KeyCloakConfig {
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/form", true))
-                .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout")))
-                .csrf().disable();
+                .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout")));
 
         return http.build();
     }
+
 }
