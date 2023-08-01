@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/makeSearch}" method="get">
+    <input type="text" name="search"/>
+    <input type="number" name="size" value="10" min="1" max="100">
+    <input type="submit" value="SEARCH">
+</form>
+
+<div th:if="${data != null}">
+    <table>
+        <th:block th:if="${data.content}">
+            <th:block th:each="entry : ${data}">
+                <tr>
+                    <td th:text="${entry.id}"></td>
+                    <td th:text="${entry.address}"></td>
+                    <td th:text="${entry.phone}"></td>
+                </tr>
+            </th:block>
+        </th:block>
+    </table>
+</div>
+
+
+</body>
+</html>

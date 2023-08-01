@@ -5,6 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-<h1>Nice!</h1>
+    <h1>Nice!</h1>
+    <form th:action="@{/view}" method="get">
+        <input type="submit" name="view" value="VIEW DATA">
+        <input type="submit" name="view" value="SEARCH">
+    </form>
 </body>
 </html>
