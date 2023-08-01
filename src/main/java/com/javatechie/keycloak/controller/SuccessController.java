@@ -41,20 +41,22 @@ public class SuccessController {
 
     @GetMapping("/makeSearch")
     @RolesAllowed("user")
-    public String search(Model model, @RequestParam(value = "search",required = false) String search,
-                         @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size){
+    public String search(Model model,
+                         @RequestParam(value = "search", required = false) String search,
+                         @RequestParam(defaultValue = "0") int page,
+                         @RequestParam(defaultValue = "10") int size) {
         Page<FormData> data;
-        PageRequestDTO pageRequestDTO=new PageRequestDTO();
+        PageRequestDTO pageRequestDTO = new PageRequestDTO();
         pageRequestDTO.setPage(page);
         pageRequestDTO.setSize(size);
         Pageable pageable = pageRequestDTO.getPageable(pageRequestDTO);
-        if(search!=null&& !search.isEmpty()){
+        if (search != null && !search.isEmpty()) {
             Specification<FormData> spec = Specification
                     .where(FormSpecification.addressContains(search))
                     .or(FormSpecification.phoneContains(search));
-            data = formService.getFormRepo().findAll(spec,pageable);
-        }else {
-            data=formService.getFormRepo().findAll(pageable);
+            data = formService.getFormRepo().findAll(spec, pageable);
+        } else {
+            data = formService.getFormRepo().findAll(pageable);
         }
         model.addAttribute("data", data);
         model.addAttribute("totalPages", data.getTotalPages());
@@ -62,4 +64,5 @@ public class SuccessController {
         model.addAttribute("search", search);
         return "search";
     }
+
 }

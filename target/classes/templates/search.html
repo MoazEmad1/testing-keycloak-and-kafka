@@ -23,6 +23,14 @@
             </th:block>
         </th:block>
     </table>
+    <div th:if="${data.hasNext()}">
+        <form th:action="@{/makeSearch}" method="get">
+            <input type="hidden" name="search" th:value="${search}">
+            <input type="hidden" name="page" th:value="${data.nextPageable().pageNumber}">
+            <input type="hidden" name="size" th:value="${data.size}">
+            <input type="submit" value="Next">
+        </form>
+    </div>
 </div>
 
 
