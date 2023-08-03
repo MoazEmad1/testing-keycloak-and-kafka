@@ -6,6 +6,7 @@ import com.javatechie.keycloak.service.FormService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,14 +25,14 @@ public class FormController {
         this.formService = formService;
     }
     @GetMapping("/form")
-    @RolesAllowed("user")
+    @PreAuthorize("hasRole('client_user')")
     public String showForm(Model model) {
         model.addAttribute("formData", new FormData());
         return "form";
     }
 
     @PostMapping("/save")
-    @RolesAllowed("user")
+    @PreAuthorize("hasRole('client_user')")
     public String submitForm(@ModelAttribute("formData") @Valid FormData formData,
                              @RequestParam("address") String address,
                              @RequestParam("phone") String phone){

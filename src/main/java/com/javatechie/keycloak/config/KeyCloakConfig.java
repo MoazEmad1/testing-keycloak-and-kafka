@@ -1,48 +1,25 @@
 package com.javatechie.keycloak.config;
 
-import org.keycloak.adapters.KeycloakConfigResolver;
-import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
+import com.javatechie.keycloak.converter.JwtAuthConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import javax.sql.DataSource;
-
 @Configuration
-@EnableWebSecurity
+@EnableMethodSecurity
+@RequiredArgsConstructor
 public class KeyCloakConfig {
-    @Bean
-    public KeycloakConfigResolver keycloakConfigResolver() {
-        return new KeycloakSpringBootConfigResolver();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(DataSource dataSource) {
-        JdbcDaoImpl jdbcDao = new JdbcDaoImpl();
-        jdbcDao.setDataSource(dataSource);
-        return jdbcDao;
-    }
+    private final JwtAuthConverter jwtAuthConverter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .requestMatchers("/form", "/save").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/form", true));
+        http.csrf(csrf->csrf.disable())
+                .authorizeRequests(authorize->authorize.anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2->oauth2.jwt().jwtAuthenticationConverter(jwtAuthConverter))
+                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) ;
         return http.build();
     }
-
 }
