@@ -45,19 +45,8 @@ public class SuccessController {
                          @RequestParam(value = "search", required = false) String search,
                          @RequestParam(defaultValue = "0") int page,
                          @RequestParam(defaultValue = "10") int size) {
-        Page<FormData> data;
-        PageRequestDTO pageRequestDTO = new PageRequestDTO();
-        pageRequestDTO.setPage(page);
-        pageRequestDTO.setSize(size);
-        Pageable pageable = pageRequestDTO.getPageable(pageRequestDTO);
-        if (search != null && !search.isEmpty()) {
-            Specification<FormData> spec = Specification
-                    .where(FormSpecification.addressContains(search))
-                    .or(FormSpecification.phoneContains(search));
-            data = formService.getFormRepo().findAll(spec, pageable);
-        } else {
-            data = formService.getFormRepo().findAll(pageable);
-        }
+        Page<FormData> data = formService.searchData(search, page, size);
+
         model.addAttribute("data", data);
         model.addAttribute("totalPages", data.getTotalPages());
         model.addAttribute("currentPage", page);
