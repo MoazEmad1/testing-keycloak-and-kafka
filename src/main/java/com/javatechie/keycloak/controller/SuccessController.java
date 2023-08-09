@@ -1,14 +1,10 @@
 package com.javatechie.keycloak.controller;
 
-import com.javatechie.keycloak.dto.PageRequestDTO;
 import com.javatechie.keycloak.entity.FormData;
 import com.javatechie.keycloak.kafka.KafkaConsumer;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import com.javatechie.keycloak.service.FormService;
-import com.javatechie.keycloak.specification.FormSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +23,7 @@ public class SuccessController {
     }
 
     @GetMapping("/view")
-    @PreAuthorize("hasRole('user')")
+    @PreAuthorize("hasRole('client_user')")
     public String success(Model model, @RequestParam("view") String view){
         if("SEARCH".equals(view)){
             return "search";
@@ -40,13 +36,12 @@ public class SuccessController {
     }
 
     @GetMapping("/makeSearch")
-    @PreAuthorize("hasRole('user')")
+    @PreAuthorize("hasRole('client_user')")
     public String search(Model model,
                          @RequestParam(value = "search", required = false) String search,
                          @RequestParam(defaultValue = "0") int page,
                          @RequestParam(defaultValue = "10") int size) {
         Page<FormData> data = formService.searchData(search, page, size);
-
         model.addAttribute("data", data);
         model.addAttribute("totalPages", data.getTotalPages());
         model.addAttribute("currentPage", page);

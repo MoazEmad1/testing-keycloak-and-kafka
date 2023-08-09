@@ -3,16 +3,11 @@ package com.javatechie.keycloak.controller;
 import com.javatechie.keycloak.entity.FormData;
 import com.javatechie.keycloak.kafka.KafkaProducer;
 import com.javatechie.keycloak.service.FormService;
-import jakarta.annotation.security.RolesAllowed;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class FormController {
@@ -24,6 +19,7 @@ public class FormController {
         this.kafkaProducer = kafkaProducer;
         this.formService = formService;
     }
+
     @GetMapping("/form")
     @PreAuthorize("hasRole('client_user')")
     public String showForm(Model model) {
@@ -33,13 +29,10 @@ public class FormController {
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('client_user')")
-    public String submitForm(@ModelAttribute("formData") @Valid FormData formData,
-                             @RequestParam("address") String address,
-                             @RequestParam("phone") String phone){
-        formData.setAddress(address);
-        formData.setPhone(phone);
-        kafkaProducer.sendMessage(address+" "+phone);
+    public String submitForm(@ModelAttribute("formData") FormData formData) {
+        kafkaProducer.sendMessage(formData.getAddress() + " " + formData.getPhone());
         formService.saveFormData(formData);
         return "success";
     }
 }
+
