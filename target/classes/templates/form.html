@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Form</title>
 </head>
@@ -15,7 +15,7 @@
         <input type="text" id="phone" th:field="*{phone}" />
         <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="error"></span>
     </div>
-    <button type="submit">Submit</button>
+    <input type="submit">
 </form>
 </body>
 </html>
