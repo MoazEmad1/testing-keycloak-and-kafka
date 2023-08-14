@@ -1,5 +1,6 @@
 package com.javatechie.keycloak.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
@@ -7,8 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Objects;
 
-@Getter
-@Setter
+@Data
 public class PageRequestDTO {
     private Integer page;
     private Integer size;

@@ -21,7 +21,7 @@ public class FormController {
     }
 
     @GetMapping("/form")
-    @PreAuthorize("hasRole('client_user')")
+    @PreAuthorize("hasRole('user')")
     public String showForm(Model model) {
         model.addAttribute("formData", new FormData());
         return "form";

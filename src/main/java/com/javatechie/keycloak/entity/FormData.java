@@ -1,10 +1,11 @@
 package com.javatechie.keycloak.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,12 +17,10 @@ public class FormData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank(message = "address is required")
+    @NotBlank(message = "Address is mandatory")
     private String address;
-
-    @NotBlank(message = "phone Number is required")
-        private String phone;
+    @NotBlank(message = "Phone is mandatory")
+    private String phone;
 
     public FormData(String address, String phone) {
         this.address = address;
